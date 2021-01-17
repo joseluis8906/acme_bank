@@ -11,7 +11,7 @@ not available
 ## to run the tests
 before running tests make sure you have type pipenv shell to run tests with all project dependencies installed
 ```
-pipenv shell && make test
+pipenv shell && pipenv install && make test
 ```
 
 ### to run the project
@@ -60,12 +60,9 @@ after running the project, you should verify that the `status` endpoint responds
 after that you must create an account with the enpoint /accounts and with the body below to which the transaction will be made:
 ```
 {
-    "data": {
-        "balance": "500000",
-        "pin": "2090",
-        "user_id": "105398891"
-    },
-    "error": null
+    "user_id": "105398891",
+    "pin": "2090",
+    "balance": "500000"
 }
 ```
 
