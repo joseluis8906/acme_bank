@@ -32,17 +32,17 @@ class AccountMongoRepo(AccountGetter, AccountSaver):
             os.getenv('MONGO_INITDB_ROOT_USERNAME'),
             os.getenv('MONGO_INITDB_ROOT_PASSWORD'), os.getenv('MONGO_HOST'),
             os.getenv('MONGO_PORT')))
-        self._db = self._client[os.getenv('MONGO_DB')]
-        self._accounts = self._db['accounts']
-        self._accounts.create_index('user_id', unique=True)
+        self.__db = self._client[os.getenv('MONGO_DB')]
+        self.__accounts = self.__db['accounts']
+        self.__accounts.create_index('user_id', unique=True)
 
     def get_by_id(self, id: str) -> Account:
-        return Account.from_dict(self._accounts.find_one({'user_id': id}))
+        return Account.from_dict(self.__accounts.find_one({'user_id': id}))
 
     def save(self, account: Account):
-        self._accounts.update({'user_id': account.id()},
-                              account.to_dict(),
-                              upsert=True)
+        self.__accounts.update({'user_id': account.id()},
+                               account.to_dict(),
+                               upsert=True)
 
 
 class DollarFakeFetcher(DollarFetcher):
