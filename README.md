@@ -73,3 +73,8 @@ the request:
 3. if one of the actions in the json file doesn't exists in the transactions, you will be receive a invalid action error
 
 at any time you can update or restart the registered account through the /accounts endpoint, the update is done based on the user_id property.
+
+### missing things
+1. implement a dependency container
+2. add a decorator to measure endpoint performance
+3. pass the execution tests inside a docker container
