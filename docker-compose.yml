@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  mongo:
+    image: mongo
+    restart: always
+    env_file:
+      - dev.env
+  
+  acme_bank:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    env_file:
+      - dev.env
+    depends_on:
+      - mongo
