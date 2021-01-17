@@ -45,7 +45,7 @@ curl --location --request PUT 'localhost:8080/accounts' \
 
 - transactions:
 ```
-curl --location --request POST 'localhost:8080/transaction' \
+curl --location --request POST 'localhost:8080/transactions' \
 --form 'data=@/Users/jhon_doe/Development/acme_bank/assets/obj.json'
 ```
 

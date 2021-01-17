@@ -7,22 +7,27 @@ from infra import AccountInMemoryRepo, DollarFakeFetcher
 from domain import Account
 from application import Workflow, StepActionError
 
+
 class TestWorkflow(unittest.TestCase):
     def test_exec_without_errors(self):
         trigger = Trigger({'user_id': '10', 'pin': '1234'}, None, None)
         steps = [
             Step(None, None, 'validate_account', None),
             Step(None, None, 'get_account_balance', None),
-            Step(None, {'money': {'value': 10000}}, 'withdraw_in_pesos', None),
-            Step(None, {'money': {'value': 3}}, 'withdraw_in_dollars', None),
+            Step(None, {'money': {
+                'value': 10000
+            }}, 'withdraw_in_pesos', None),
+            Step(None, {'money': {
+                'value': 3
+            }}, 'withdraw_in_dollars', None),
         ]
         transaction = Transaction(steps, trigger)
-        accountRepo = AccountInMemoryRepo()
-        accountRepo.save(Account('10', '1234', 50000))
-        dollarFetcher = DollarFakeFetcher()
-        workflow = Workflow(accountRepo, accountRepo, dollarFetcher)
+        account_repo = AccountInMemoryRepo()
+        account_repo.save(Account('10', '1234', 50000))
+        dollar_fetcher = DollarFakeFetcher()
+        workflow = Workflow(account_repo, account_repo, dollar_fetcher)
         workflow.run(transaction)
-        account = accountRepo.get_by_id('10')
+        account = account_repo.get_by_id('10')
         self.assertEqual(account.balance(), 29623)
 
     def test_exec_return_error(self):
@@ -31,15 +36,18 @@ class TestWorkflow(unittest.TestCase):
             steps = [
                 Step(None, None, 'validate_account', None),
                 Step(None, None, 'get_account_balance', None),
-                Step(None, {'money': {'value': 10000}}, 'withdraw_in_pesos', None),
-                Step(None, {'money': {'value': 3}}, 'withdraw_in_euros', None),
+                Step(None, {'money': {
+                    'value': 10000
+                }}, 'withdraw_in_pesos', None),
+                Step(None, {'money': {
+                    'value': 3
+                }}, 'withdraw_in_euros', None),
             ]
             transaction = Transaction(steps, trigger)
-            accountRepo = AccountInMemoryRepo()
-            accountRepo.save(Account('11', '4321', 50000))
-            dollarFetcher = DollarFakeFetcher()
-            workflow = Workflow(accountRepo, accountRepo, dollarFetcher)
+            account_repo = AccountInMemoryRepo()
+            account_repo.save(Account('11', '4321', 50000))
+            dollar_fetcher = DollarFakeFetcher()
+            workflow = Workflow(account_repo, account_repo, dollar_fetcher)
             workflow.run(transaction)
-            account = accountRepo.get_by_id('10')
+            account = account_repo.get_by_id('10')
             self.assertEqual(account.balance(), 29623)
-        

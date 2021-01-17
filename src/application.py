@@ -4,31 +4,38 @@
 from domain import Account, PinValidationError, AccountWithoutBalanceError
 from dto import Transaction
 
+
 class StepActionError(Exception):
     pass
 
+
 class AccountSaver:
-    def save(account: Account):
+    def save(self, account: Account):
         raise Exception('method not implemented')
+
 
 class AccountGetter:
-    def get_by_id(id: str) -> Account:
+    def get_by_id(self, id: str) -> Account:
         raise Exception('method not implemented')
+
 
 class DollarFetcher:
-    def fetch() -> float:
+    def fetch(self) -> float:
         raise Exception('method not implemented')
 
+
 class Workflow:
-    def __init__(self, accountGetter: AccountGetter, accountSaver: AccountSaver, dollarFetcher: DollarFetcher):
+    def __init__(self, account_getter: AccountGetter,
+                 account_saver: AccountSaver, dollar_fetcher: DollarFetcher):
         self.account = None
         self.transaction = None
-        self.accountGetter = accountGetter
-        self.accountSaver = accountSaver
-        self.dollarFetcher = dollarFetcher
+        self.account_getter = account_getter
+        self.account_saver = account_saver
+        self.dollar_fetcher = dollar_fetcher
 
     def _get_account(self):
-        self.account = self.accountGetter.get_by_id(self.transaction.trigger.params['user_id'])
+        self.account = self.account_getter.get_by_id(
+            self.transaction.trigger.params['user_id'])
 
     def _validate_account(self):
         self.account.verify_pin(self.transaction.trigger.params['pin'])
@@ -43,7 +50,7 @@ class Workflow:
         self.account.sub_balance(cop_amount)
 
     def _withdraw_in_dollars(self, usd_amount: float):
-        amount_in_pesos = usd_amount * self.dollarFetcher.fetch()
+        amount_in_pesos = usd_amount * self.dollar_fetcher.fetch()
         self.account.sub_balance(amount_in_pesos)
 
     def run(self, transaction: Transaction):
@@ -63,12 +70,12 @@ class Workflow:
             else:
                 raise StepActionError('invalid action {}'.format(step.action))
 
-        self.accountSaver.save(self.account)
+        self.account_saver.save(self.account)
+
 
 class CreateAccount:
-    def __init__(self, accountSaver: AccountSaver):
-        self.accountSaver = accountSaver
+    def __init__(self, account_saver: AccountSaver):
+        self.account_saver = account_saver
 
     def run(self, data: dict):
-        self.accountSaver.save(Account.from_dict(data))
-
+        self.account_saver.save(Account.from_dict(data))
