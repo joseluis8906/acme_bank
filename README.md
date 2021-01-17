@@ -9,13 +9,20 @@ not available
 5. docker-compose https://docs.docker.com/compose/install/
 
 ## to run the tests
-make test
+before running tests make sure you have type pipenv shell to run tests with all project dependencies installed
+```
+pipenv shell && make test
+```
 
 ### to run the project
+```
 make run
+```
 
 ### to clean the project (remove docker containers, networks, etc)
+```
 make clean
+```
 
 ## usage
 the project consists of three endpoints:
