@@ -3,6 +3,7 @@
 
 import json
 
+
 class Param:
     def __init__(self, from_id: str, param_id: str):
         self.from_id = from_id
@@ -15,6 +16,7 @@ class Param:
     def to_dict(self):
         return dict(from_id=self.from_id, param_id=self.param_id)
 
+
 class Condition:
     def __init__(self, from_id: str, field_id: str, operator: str, value: any):
         self.from_id = from_id
@@ -24,10 +26,15 @@ class Condition:
 
     @classmethod
     def from_dict(cls, raw: dict):
-        return cls(raw['from_id'], raw['field_id'], raw['operator'], raw['value'])
+        return cls(raw['from_id'], raw['field_id'], raw['operator'],
+                   raw['value'])
 
     def to_dict(self):
-        return dict(from_id=self.from_id, field_id=self.field_id, operator=self.operator, value=self.value)
+        return dict(from_id=self.from_id,
+                    field_id=self.field_id,
+                    operator=self.operator,
+                    value=self.value)
+
 
 class Transition:
     def __init__(self, conditions: [Condition], target: str):
@@ -37,15 +44,17 @@ class Transition:
     @classmethod
     def from_dict(cls, raw: dict):
         conditions = []
-        for c in raw['condition']:
-            conditions.append(Condition.from_dict(c))
+        for condition in raw['condition']:
+            conditions.append(Condition.from_dict(condition))
         return cls(conditions, raw['target'])
 
     def to_dict(self):
         return dict(condition=self.conditions, target=self.target)
 
+
 class Step:
-    def __init__(self, id: str, params: dict, action: str, transitions: [Transition]):
+    def __init__(self, id: str, params: dict, action: str,
+                 transitions: [Transition]):
         self.id = id
         self.params = params
         self.action = action
@@ -54,43 +63,48 @@ class Step:
     @classmethod
     def from_dict(cls, raw: dict):
         transitions = []
-        for t in raw['transitions']:
-            transitions.append(Transition.from_dict(t))
+        for transition in raw['transitions']:
+            transitions.append(Transition.from_dict(transition))
         return cls(raw['id'], raw['params'], raw['action'], transitions)
 
-
     def to_dict(self):
-        return dict(id=self.id, params=self.params, action=self.action, transitions=self.transitions)
+        return dict(id=self.id,
+                    params=self.params,
+                    action=self.action,
+                    transitions=self.transitions)
+
 
 class Trigger:
-    def __init__(self, params: dict, transitions: [Transition], id_: str):
+    def __init__(self, params: dict, transitions: [Transition], id: str):
         self.params = params
         self.transitions = transitions
-        self.id = id_
+        self.id = id
 
     @classmethod
     def from_dict(cls, raw: dict):
         transitions = []
-        for t in raw['transitions']:
-            transitions.append(Transition.from_dict(t))
+        for transition in raw['transitions']:
+            transitions.append(Transition.from_dict(transition))
         return cls(raw['params'], transitions, raw['id'])
 
     def to_dict(self):
-        return dict(params=self.params, transitions=self.transitions, id=self.id)
+        return dict(params=self.params,
+                    transitions=self.transitions,
+                    id=self.id)
+
 
 class Transaction:
     def __init__(self, steps: [Step], trigger: Trigger):
         self.steps = steps
         self.trigger = trigger
-    
+
     @classmethod
     def from_dict(cls, raw: dict):
         steps = []
-        for s in raw['steps']:
-            steps.append(Step.from_dict(s))
+        for step in raw['steps']:
+            steps.append(Step.from_dict(step))
         trigger = Trigger.from_dict(raw['trigger'])
         return cls(steps, trigger)
 
     def to_dict(self):
         return dict(steps=self.steps, trigger=self.trigger)
-
