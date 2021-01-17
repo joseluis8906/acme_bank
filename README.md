@@ -62,7 +62,7 @@ after that you must create an account with the enpoint /accounts and with the bo
 }
 ```
 
-as a last step you must verify your json file that contains the transaction that will be applied to the newly created account, things to check before submitting
+as a last step you must verify your json file that contains the transactions that will be applied to the newly created account, things to check before submitting
 the request:
 1. the user_id and pin is the same as the account, if they are different you will be receive a validation error
 2. if while the transactions are carried out the account runs out of balance, you will be receive a balance error
