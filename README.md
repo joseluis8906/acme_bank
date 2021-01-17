@@ -11,7 +11,7 @@ not available
 ## to run the tests
 before running tests make sure you have type pipenv shell to run tests with all project dependencies installed
 ```
-pipenv shell && make test
+pipenv shell && pipenv install && make test
 ```
 
 ### to run the project
